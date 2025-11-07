@@ -1,3 +1,8 @@
+# Go Auth Microservice
+
+![Go CI](https://github.com/isubhampadhi56/go-auth-microservice/actions/workflows/ci.yml/badge.svg)
+![Go Version](https://img.shields.io/badge/go-1.25-blue.svg)
+![License](https://img.shields.io/github/license/isubhampadhi56/go-auth-microservice.svg)
 
 # API Documentation
 
