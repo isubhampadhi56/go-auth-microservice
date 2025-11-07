@@ -47,7 +47,9 @@ func DeActivateUser(w http.ResponseWriter, r *http.Request) {
 	var blackListedToken tokencache.BlackListedToken = tokencache.GetBlacklistTokenCache()
 	token := r.Header.Get("Authorization")
 	blackListedToken.Set(token, time.Now().Add(time.Minute*time.Duration(5)).Unix())
-	w.Write([]byte("user has been disabled"))
+	if _, err := w.Write([]byte("user has been disabled")); err != nil {
+		log.Errorf("unable to write response %s", err)
+	}
 }
 
 func ChangePassword(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +57,10 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	userId, _ := ctx.Value("userId").(uint64)
 	var data map[string]interface{}
-	json.NewDecoder(r.Body).Decode(&data)
+	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
 	password, ok := data["password"].(string)
 	if !ok {
 		log.Error("invalid request to change password for user ID ", userId)
@@ -73,8 +78,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		log.Errorf("unable to find user with ID %v ", userId, err)
 		return
 	}
-	err = userData.SetPassword(password)
-	if err != nil {
+	if err := userData.SetPassword(password); err != nil {
 		http.Error(w, "unable to change password", http.StatusInternalServerError)
 		log.Error("unable to change password for ID ", userId, " ", err)
 		return
@@ -88,5 +92,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 	var blackListedToken tokencache.BlackListedToken = tokencache.GetBlacklistTokenCache()
 	token := r.Header.Get("Authorization")
 	blackListedToken.Set(token, time.Now().Add(time.Minute*time.Duration(5)).Unix())
-	w.Write([]byte("user password has been changed."))
+	if _, err := w.Write([]byte("user password has been changed.")); err != nil {
+		log.Errorf("unable to write response %s", err)
+	}
 }

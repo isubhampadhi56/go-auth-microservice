@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -258,8 +259,10 @@ func TestRefreshToken(t *testing.T) {
 	testRouter.ServeHTTP(loginRR, loginReq)
 
 	var loginResponse TestResponse
-	json.Unmarshal(loginRR.Body.Bytes(), &loginResponse)
-
+	err := json.Unmarshal(loginRR.Body.Bytes(), &loginResponse)
+	if err != nil {
+		log.Printf("unable to parse login response")
+	}
 	tests := []struct {
 		name           string
 		refreshToken   string

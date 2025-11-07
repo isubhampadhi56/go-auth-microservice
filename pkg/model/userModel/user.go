@@ -33,7 +33,9 @@ func (user *UserData) ValidatePassword(plainPassword string) error {
 
 func (user *UserData) Save() error {
 	dbConn := db.GetDBConn()
-	dbConn.AutoMigrate(&UserData{})
+	if err := dbConn.AutoMigrate(&UserData{}); err != nil {
+		return err
+	}
 	user.UpdatedAt = time.Now()
 	result := dbConn.GetDB().Save(user)
 	return result.Error

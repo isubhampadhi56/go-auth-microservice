@@ -31,13 +31,19 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var userData usermodel.UserSignUp = usermodel.CreateUser(user.Email)
-	userData.SetPassword(user.Password)
+	if err := userData.SetPassword(user.Password); err != nil {
+		log.Error("password encryption failed")
+		http.Error(w, "unable to craete user", http.StatusBadRequest)
+		return
+	}
 	if err := userData.Save(); err != nil {
 		log.Error("unable to create user")
 		http.Error(w, "email already exist", http.StatusConflict)
 		return
 	}
-	json.NewEncoder(w).Encode(userData)
+	if err := json.NewEncoder(w).Encode(userData); err != nil {
+		log.Errorf("unable to encode json response %s", err)
+	}
 	log.Info("user has been created", userData)
 }
 
@@ -87,7 +93,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	res := map[string]interface{}{}
 	res["accesstoken"] = accessToken
 	res["refreshtoken"] = refreshToken
-	json.NewEncoder(w).Encode(res)
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		log.Errorf("unable to encode json response %s", err)
+	}
 	log.Infof("user with ID %v and Email %v has loggedIn successfully", userData.GetUserID(), user.Email)
 }
 
@@ -133,13 +141,17 @@ func RefreshAccessToken(w http.ResponseWriter, r *http.Request) {
 	}
 	res := map[string]interface{}{}
 	res["accesstoken"] = accessToken
-	json.NewEncoder(w).Encode(res)
+	if err = json.NewEncoder(w).Encode(res); err != nil {
+		log.Errorf("unable to encode json response %s", err)
+	}
 	log.Info("refresh Token has been generated for user ID %v", userData.GetUserID())
 }
 
 func CheckIfSessionValid(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	log := logger.InitializeAuditLogger()
 	userId, _ := ctx.Value("userId").(uint64)
-	w.Write([]byte("user auth is valid for ID " + strconv.Itoa(int(userId))))
-
+	if _, err := w.Write([]byte("user auth is valid for ID " + strconv.Itoa(int(userId)))); err != nil {
+		log.Errorf("unable to write response %s", err)
+	}
 }
