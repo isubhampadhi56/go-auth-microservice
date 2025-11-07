@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/api-assignment/pkg/utils/logger"
+	"github.com/go-auth-microservice/pkg/utils/logger"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

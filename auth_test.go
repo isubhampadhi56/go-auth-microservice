@@ -9,8 +9,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/api-assignment/pkg/contoller"
-	"github.com/api-assignment/pkg/utils/logger"
+	"github.com/go-auth-microservice/pkg/controller"
+	"github.com/go-auth-microservice/pkg/utils/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 )
@@ -32,17 +32,17 @@ func setupTestRouter() *chi.Mux {
 	router := chi.NewRouter()
 
 	// Auth routes
-	router.Post("/api/v1/auth/signup", contoller.Signup)
-	router.Post("/api/v1/auth/login", contoller.Login)
-	router.Get("/api/v1/auth/token", contoller.RefreshAccessToken)
+	router.Post("/api/v1/auth/signup", controller.Signup)
+	router.Post("/api/v1/auth/login", controller.Login)
+	router.Get("/api/v1/auth/token", controller.RefreshAccessToken)
 
 	// Protected routes - these will be tested separately with proper auth
 	router.Group(func(r chi.Router) {
 		// For testing protected routes, we'll use a simple auth check
-		r.Get("/api/v1/me", contoller.CheckIfSessionValid)
-		r.Get("/api/v1/user", contoller.GetUserData)
-		r.Patch("/api/v1/deactivate", contoller.DeActivateUser)
-		r.Patch("/api/v1/changePassword", contoller.ChangePassword)
+		r.Get("/api/v1/me", controller.CheckIfSessionValid)
+		r.Get("/api/v1/user", controller.GetUserData)
+		r.Patch("/api/v1/deactivate", controller.DeActivateUser)
+		r.Patch("/api/v1/changePassword", controller.ChangePassword)
 	})
 
 	return router

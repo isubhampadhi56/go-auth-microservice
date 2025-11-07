@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/api-assignment/pkg/utils/db"
+	"github.com/go-auth-microservice/pkg/utils/db"
 	"golang.org/x/crypto/bcrypt"
 )
 

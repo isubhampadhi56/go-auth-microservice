@@ -1,11 +1,15 @@
 package config
 
+import (
+	"os"
+	"strconv"
+)
+
 type Config struct {
 	accessTokenSecret  []byte
 	accessTokenExpiry  int
 	refreshTokenSecret []byte
 	refreshTokenExpiry int
-	port               int
 }
 
 func (c *Config) GetAccessTokenSecret() []byte {
@@ -20,9 +24,6 @@ func (c *Config) GetAccessTokenExpiry() int {
 func (c *Config) GetRefreshTokenExpiry() int {
 	return c.refreshTokenExpiry
 }
-func (c *Config) GetAppPort() int {
-	return c.port
-}
 
 var config *Config
 
@@ -30,12 +31,20 @@ func GetConfig() *Config {
 	if config != nil {
 		return config
 	}
+	accessTknExp, err := strconv.Atoi(os.Getenv("ACCESS_TKN_EXP"))
+	if err != nil {
+		accessTknExp = 5
+	}
+	refreshTknExp, err := strconv.Atoi(os.Getenv("ACCESS_TKN_EXP"))
+	if err != nil {
+		refreshTknExp = 72
+	}
+
 	config = &Config{
-		accessTokenSecret:  []byte("hello"),
-		refreshTokenSecret: []byte("hello123"),
-		accessTokenExpiry:  5,
-		refreshTokenExpiry: 72,
-		port:               8080,
+		accessTokenSecret:  []byte(os.Getenv("ACCESS_TKN_SECRET")),
+		refreshTokenSecret: []byte(os.Getenv("REFRESH_TKN_SECRET")),
+		accessTokenExpiry:  accessTknExp,
+		refreshTokenExpiry: refreshTknExp,
 	}
 	return config
 }

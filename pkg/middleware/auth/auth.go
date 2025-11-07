@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	tokencache "github.com/api-assignment/pkg/model/tokenCache"
-	jwtauth "github.com/api-assignment/pkg/utils/jwtAuth"
-	"github.com/api-assignment/pkg/utils/logger"
+	tokencache "github.com/go-auth-microservice/pkg/model/tokenCache"
+	jwtauth "github.com/go-auth-microservice/pkg/utils/jwtAuth"
+	"github.com/go-auth-microservice/pkg/utils/logger"
 )
 
 func AccessTokenVerify(next http.Handler) http.Handler {

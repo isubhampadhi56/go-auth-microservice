@@ -3,7 +3,7 @@ package jwtauth
 import (
 	"time"
 
-	"github.com/api-assignment/pkg/config"
+	"github.com/go-auth-microservice/pkg/config"
 	"github.com/golang-jwt/jwt/v5"
 )
 

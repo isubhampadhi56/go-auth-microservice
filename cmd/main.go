@@ -3,12 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
-	"strconv"
+	"os"
 
-	"github.com/api-assignment/pkg/config"
-	router "github.com/api-assignment/pkg/routes"
-	"github.com/api-assignment/pkg/utils/db"
-	"github.com/api-assignment/pkg/utils/logger"
+	router "github.com/go-auth-microservice/pkg/routes"
+	"github.com/go-auth-microservice/pkg/utils/db"
+	"github.com/go-auth-microservice/pkg/utils/logger"
 	"github.com/joho/godotenv"
 )
 
@@ -18,7 +17,10 @@ func main() {
 		log.Panicf("⚠️ No .env file found, using system environment variables")
 	}
 	router := router.MainRouter()
-	port := strconv.Itoa(config.GetConfig().GetAppPort())
+	port := os.Getenv("API_PORT")
+	if len(port) == 0 {
+		port = "8080"
+	}
 	log := logger.InitializeAppLogger()
 	_ = db.GetDBConn()
 	log.Info("Starting API Server on Port ", port)

@@ -1,4 +1,4 @@
-module github.com/api-assignment
+module github.com/go-auth-microservice
 
 go 1.23.0
 
@@ -40,3 +40,5 @@ require (
 	github.com/go-playground/validator/v10 v10.23.0
 	gorm.io/driver/postgres v1.6.0
 )
+
+replace github.com/go-auth-microservice => .

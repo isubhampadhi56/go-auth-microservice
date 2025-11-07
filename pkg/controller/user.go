@@ -1,13 +1,13 @@
-package contoller
+package controller
 
 import (
 	"encoding/json"
 	"net/http"
 	"time"
 
-	tokencache "github.com/api-assignment/pkg/model/tokenCache"
-	usermodel "github.com/api-assignment/pkg/model/userModel"
-	"github.com/api-assignment/pkg/utils/logger"
+	tokencache "github.com/go-auth-microservice/pkg/model/tokenCache"
+	usermodel "github.com/go-auth-microservice/pkg/model/userModel"
+	"github.com/go-auth-microservice/pkg/utils/logger"
 )
 
 func GetUserData(w http.ResponseWriter, r *http.Request) {

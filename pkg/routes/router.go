@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	v1router "github.com/api-assignment/pkg/routes/v1"
+	v1router "github.com/go-auth-microservice/pkg/routes/v1"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

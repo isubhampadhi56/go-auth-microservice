@@ -1,14 +1,14 @@
-package contoller
+package controller
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
 
-	usermodel "github.com/api-assignment/pkg/model/userModel"
-	jwtauth "github.com/api-assignment/pkg/utils/jwtAuth"
-	"github.com/api-assignment/pkg/utils/logger"
-	"github.com/api-assignment/pkg/utils/validation"
+	usermodel "github.com/go-auth-microservice/pkg/model/userModel"
+	jwtauth "github.com/go-auth-microservice/pkg/utils/jwtAuth"
+	"github.com/go-auth-microservice/pkg/utils/logger"
+	"github.com/go-auth-microservice/pkg/utils/validation"
 	"github.com/golang-jwt/jwt/v5"
 )
 
