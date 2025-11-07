@@ -56,11 +56,27 @@ func TestMain(m *testing.M) {
 	// Initialize logger for testing
 	logger.InitializeAppLogger()
 
+	// Clear the database before running tests
+	clearDatabase()
+
 	// Run tests
 	code := m.Run()
 
 	// Cleanup
 	os.Exit(code)
+}
+
+// clearDatabase clears all data from the SQLite database
+func clearDatabase() {
+	// Remove the SQLite database file if it exists
+	if _, err := os.Stat("users.db"); err == nil {
+		err := os.Remove("users.db")
+		if err != nil {
+			logger.InitializeAppLogger().Errorf("Failed to remove database file: %v", err)
+		} else {
+			logger.InitializeAppLogger().Info("Cleared SQLite database for tests")
+		}
+	}
 }
 
 // TestSignup tests user registration functionality
