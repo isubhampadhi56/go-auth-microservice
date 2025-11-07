@@ -2,6 +2,7 @@ package db
 
 import (
 	"log"
+	"os"
 
 	"gorm.io/gorm"
 )
@@ -9,6 +10,7 @@ import (
 type DB interface {
 	GetDB() *gorm.DB
 	AutoMigrate(...interface{}) error
+	Initialize()
 }
 
 var dBConn DB
@@ -18,10 +20,14 @@ func GetDBConn() DB {
 		return dBConn
 	}
 
-	dbType := "sqlite"
+	dbType := os.Getenv("DB_TYPE")
 	switch dbType {
 	case "sqlite":
-		dBConn = InitializeSqliteDB()
+		dBConn = &sqliteDB{}
+		dBConn.Initialize()
+	case "postgress":
+		dBConn = &postgressDB{}
+		dBConn.Initialize()
 	default:
 		log.Fatalf("invalid database type %s", dbType)
 	}

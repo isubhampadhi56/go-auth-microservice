@@ -7,6 +7,7 @@ import (
 
 	"github.com/api-assignment/pkg/config"
 	router "github.com/api-assignment/pkg/routes"
+	"github.com/api-assignment/pkg/utils/db"
 	"github.com/api-assignment/pkg/utils/logger"
 	"github.com/joho/godotenv"
 )
@@ -19,6 +20,7 @@ func main() {
 	router := router.MainRouter()
 	port := strconv.Itoa(config.GetConfig().GetAppPort())
 	log := logger.InitializeAppLogger()
+	_ = db.GetDBConn()
 	log.Info("Starting API Server on Port ", port)
 	err = http.ListenAndServe(":"+port, router)
 	if err != nil {
