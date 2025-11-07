@@ -4,12 +4,14 @@ import (
 	"os"
 
 	"github.com/api-assignment/pkg/utils/logger"
+	"go.uber.org/zap"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type sqliteDB struct {
-	db *gorm.DB
+	db  *gorm.DB
+	log *zap.SugaredLogger
 }
 
 func (sdb *sqliteDB) GetDB() *gorm.DB {
@@ -23,31 +25,23 @@ func (sdb *sqliteDB) AutoMigrate(models ...interface{}) error {
 	}
 	return err
 }
-
-func InitializeSqliteDB() *sqliteDB {
-	log := logger.InitializeAppLogger()
+func (sdb *sqliteDB) Initialize() {
+	sdb.log = logger.InitializeAppLogger()
 	if _, err := os.Stat("users.db"); err == nil {
-		log.Info("Database already exists. Skipping initialization.")
-		dbConn, err := gorm.Open(sqlite.Open("users.db"), &gorm.Config{})
+		sdb.log.Info("Database already exists. Skipping initialization.")
+		sdb.db, err = gorm.Open(sqlite.Open("users.db"), &gorm.Config{})
 		if err != nil {
-			log.Fatalf("Failed to connect to the database: %v", err)
-			return nil
+			sdb.log.Fatalf("Failed to connect to the database: %v", err)
 		}
-		return &sqliteDB{
-			db: dbConn,
-		}
+		sdb.log.Info("connected to sqlite database")
 	} else if os.IsNotExist(err) {
-		log.Info("Database does not exist. Initializing database.")
-		dbConn, err := gorm.Open(sqlite.Open("users.db"), &gorm.Config{})
+		sdb.log.Info("Database does not exist. Initializing database.")
+		sdb.db, err = gorm.Open(sqlite.Open("users.db"), &gorm.Config{})
 		if err != nil {
-			log.Fatalf("Failed to connect to the database: %v", err)
-			return nil
+			sdb.log.Fatalf("Failed to connect to the database: %v", err)
 		}
-		return &sqliteDB{
-			db: dbConn,
-		}
+		sdb.log.Info("connected to sqlite database")
 	} else {
-		log.Fatalf("Error checking the database file: %v", err)
-		return nil
+		sdb.log.Fatalf("Error checking the database file: %v", err)
 	}
 }
