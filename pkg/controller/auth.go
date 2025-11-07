@@ -151,7 +151,7 @@ func CheckIfSessionValid(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := logger.InitializeAuditLogger()
 	userId, _ := ctx.Value("userId").(uint64)
-	if _, err := w.Write([]byte("user auth is valid for ID " + strconv.Itoa(int(userId)))); err != nil {
+	if _, err := w.Write([]byte("user auth is valid for ID " + strconv.FormatUint(userId, 10))); err != nil {
 		log.Errorf("unable to write response %s", err)
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	router "github.com/go-auth-microservice/pkg/routes"
 	"github.com/go-auth-microservice/pkg/utils/db"
@@ -26,9 +27,16 @@ func main() {
 	}
 	log := logger.InitializeAppLogger()
 	_ = db.GetDBConn()
+	httpServer := &http.Server{
+		Addr:              ":" + port,
+		Handler:           router,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second, // optional but recommended
+	}
 	log.Info("Starting API Server on Port ", port)
-	err := http.ListenAndServe(":"+port, router)
-	if err != nil {
+	if err := httpServer.ListenAndServe(); err != nil {
 		log.Fatalf("unable to start server on port %d ", port, err)
 	}
 }
