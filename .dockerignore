@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go
+*.exe
+*.test
+*.prof
+
+# Logs
+*.log
+
+# Environment files (we'll handle these separately)
+.env
+
+# Test files
+*_test.go
+
+# Documentation
+README.md
