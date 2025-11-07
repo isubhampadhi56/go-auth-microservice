@@ -49,6 +49,6 @@ USER appuser
 # Expose port (default: 8080, can be overridden with API_PORT environment variable)
 # To publish the port when running: docker run -p 8080:8080 or docker run -p 3000:8080
 EXPOSE 8080
-
+ENV APP_ENV=PRODUCTION
 # Command to run the application
 CMD ["./main"]
