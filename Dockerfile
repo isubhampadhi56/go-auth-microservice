@@ -23,8 +23,14 @@ RUN go build -ldflags="-s -w" -o main ./cmd/main.go
 # Runtime stage
 FROM alpine:3.21
 
-# Install CA certificates for HTTPS requests
-RUN apk --no-cache add ca-certificates
+# Install CA certificates and tzdata for time zone support
+RUN apk --no-cache add ca-certificates tzdata
+
+# Optionally set the TZ env var so apps/commands see local timezone
+ENV TZ=Asia/Kolkata
+
+# (Optional) Configure localtime file
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Create non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
