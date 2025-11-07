@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -260,9 +259,7 @@ func TestRefreshToken(t *testing.T) {
 
 	var loginResponse TestResponse
 	err := json.Unmarshal(loginRR.Body.Bytes(), &loginResponse)
-	if err != nil {
-		log.Printf("unable to parse login response")
-	}
+	assert.NoError(t, err, "Response should be valid JSON")
 	tests := []struct {
 		name           string
 		refreshToken   string
@@ -335,7 +332,8 @@ func TestProtectedRoutes(t *testing.T) {
 	testRouter.ServeHTTP(loginRR, loginReq)
 
 	var loginResponse TestResponse
-	json.Unmarshal(loginRR.Body.Bytes(), &loginResponse)
+	err := json.Unmarshal(loginRR.Body.Bytes(), &loginResponse)
+	assert.NoError(t, err, "Response should be valid JSON")
 
 	// Test that we can access protected routes with valid tokens
 	t.Run("Access protected routes with valid token", func(t *testing.T) {

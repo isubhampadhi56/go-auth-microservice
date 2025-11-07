@@ -19,7 +19,9 @@ func GetUserData(w http.ResponseWriter, r *http.Request) {
 		log.Errorf("unable to find user with ID %v ", userId, err)
 		return
 	}
-	json.NewEncoder(w).Encode(userData)
+	if err := json.NewEncoder(w).Encode(userData); err != nil {
+		log.Errorf("unable to encode json response %s", err)
+	}
 }
 
 func DeActivateUser(w http.ResponseWriter, r *http.Request) {
