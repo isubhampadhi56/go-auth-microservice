@@ -10,6 +10,9 @@ import (
 	"github.com/go-auth-microservice/pkg/utils/logger"
 )
 
+// contextKey is a custom type for context keys to avoid collisions
+type contextKey string
+
 func AccessTokenVerify(next http.Handler) http.Handler {
 	var blackListedToken tokencache.BlackListedToken = tokencache.GetBlacklistTokenCache()
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +36,7 @@ func AccessTokenVerify(next http.Handler) http.Handler {
 			return
 		}
 		userId, _ := claims["userId"].(float64)
-		ctx := context.WithValue(r.Context(), "userId", uint64(userId))
+		ctx := context.WithValue(r.Context(), contextKey("userId"), uint64(userId))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

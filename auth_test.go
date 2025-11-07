@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -51,7 +52,9 @@ func setupTestRouter() *chi.Mux {
 // TestMain sets up and tears down test environment
 func TestMain(m *testing.M) {
 	// Set environment variables for testing
-	os.Setenv("DB_TYPE", "sqlite")
+	if err := os.Setenv("DB_TYPE", "sqlite"); err != nil {
+		log.Print("unable to set DB variable")
+	}
 
 	// Initialize logger for testing
 	logger.InitializeAppLogger()
